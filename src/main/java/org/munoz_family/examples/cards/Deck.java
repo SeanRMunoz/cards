@@ -17,14 +17,14 @@ import org.munoz_family.examples.cards.Card.Suit;
  */
 public class Deck {
 
-	private Set<Card> cards = new LinkedHashSet<>(Card.Rank.values().length * Card.Suit.values().length);
+	private Set<Card> cards;
 
 	public Deck() {
 		initializeDeck();
 	}
 
 	public void initializeDeck() {
-		cards.clear();
+		cards = new LinkedHashSet<>(Card.Rank.values().length * Card.Suit.values().length);
 		for (Suit suit : Card.Suit.values()) {
 			for (Rank rank : Card.Rank.values()) {
 				Card card = new Card(rank, suit);
@@ -35,7 +35,7 @@ public class Deck {
 
 	public Card dealCard() {
 		Card deltCard = null;
-		if (cards.iterator().hasNext()) {
+		if (cards != null && cards.iterator().hasNext()) {
 			deltCard = cards.iterator().next();
 			cards.remove(deltCard);
 		}
@@ -44,7 +44,7 @@ public class Deck {
 
 	public List<Card> dealCards(int cardCount) {
 		List<Card> deltCards = new ArrayList<>();
-		while (cardCount > 0 && cardCount <= cards.size()) {
+		while (cardCount > 0 && cards != null && cardCount <= cards.size()) {
 			deltCards.add(dealCard());
 			--cardCount;
 		}
@@ -52,20 +52,26 @@ public class Deck {
 	}
 	
 	public void shuffleCards() {
-		List<Card> cardList = new ArrayList<>(cards.size());
-		cardList.addAll(cards);
-		cards.clear();
-		while (!cardList.isEmpty()) {
-			int cardNum = (int) (Math.random() * cardList.size());
-			cards.add(cardList.remove(cardNum));
+		if (cards != null) {
+			// Shuffle cards by removing ALL cards into a List,
+			// then add them back to the Set in random order
+			List<Card> cardList = new ArrayList<>(cards.size());
+			cardList.addAll(cards);
+			cards.clear();
+			while (!cardList.isEmpty()) {
+				int cardNum = (int) (Math.random() * cardList.size());
+				cards.add(cardList.remove(cardNum));
+			}
 		}
 	}
 
 	public void printDeck() {
-		int cardNumber = 0;
-		for (Card card : cards) {
-			++cardNumber;
-			System.out.println("Card " + cardNumber + " is a : " + card);
+		if (cards != null) {
+			int cardNumber = 0;
+			for (Card card : cards) {
+				++cardNumber;
+				System.out.println("Card " + cardNumber + " is a : " + card);
+			}
 		}
 	}
 
