@@ -3,6 +3,7 @@ package org.munoz_family.examples.cards;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -135,7 +136,7 @@ public class DeckTest {
 	@Test
 	public void testGetCards() {
 		// Test new deck has 52 cards
-		Set<Card> cards = deck.getCards();
+		Collection<Card> cards = deck.getCards();
 		assertEquals(countTotalCards, cards.size());
 		assertTrue(cards.contains(new Card(Rank.ACE, Suit.SPADES)));
 	}

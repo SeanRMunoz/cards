@@ -1,14 +1,20 @@
 package org.munoz_family.examples.cards;
 
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Example of classic Playing Card class
  * 
  * @author Sean Munoz
  *
  */
-public class Card {
+public class Card implements Comparable<Card> {
 
-	enum Rank {
+	public static final int WILD_CARD = -1; 
+
+	public enum Rank {
 		DUECE,
 		THREE,
 		FOUR,
@@ -18,10 +24,47 @@ public class Card {
 		EIGHT,
 		NINE,
 		TEN,
-		JACK,
-		QUEEN,
-		KING,
-		ACE,
+		JACK(10),
+		QUEEN(10),
+		KING(10),
+		ACE(1,11),
+		;
+		private Integer [] values;
+
+		Rank()
+		{
+			this.values = new Integer[] {this.ordinal() + 2};
+		}
+		
+		Rank( Integer...values )
+		{
+			this.values = values;
+		}
+		
+		public boolean hasMultipleValues()
+		{
+			return values != null & values.length > 1; 
+		}
+
+		public Integer[] getValues() {
+			return values;
+		}
+		public void setValues(Integer[] values) {
+			this.values = values;
+		}
+		public int getValue() {
+			return values != null && values.length > 0 ? values[0] : 0;
+		}
+		public int getMinValue() {
+			return values != null ? Stream.of(values).min( Comparator.comparing( Integer::valueOf )).get() : 0;
+		}
+		public int getMaxValue() {
+			return values != null ? Stream.of(values).max( Comparator.comparing( Integer::valueOf )).get() : 0;
+		}
+		public void setValue(int value) {
+			this.values = new Integer[] {value};
+		}
+		
 	}
 	
 	enum Suit {
@@ -73,7 +116,11 @@ public class Card {
 	
 	@Override
 	public String toString() {
-		return "Card [rank=" + rank + ", suit=" + suit + "]";
+		String valueString = this.getRank().hasMultipleValues()
+				? "" + Stream.of( this.getRank().getValues() ).map( Object::toString ).collect( Collectors.joining(",") )
+				: "" + this.getRank().getValue();
+		
+		return rank + "-" + suit + " (" + valueString + ")";
 	}
 	
 	// Getters & Setters...
@@ -88,6 +135,21 @@ public class Card {
 	}
 	public void setSuit(Suit suit) {
 		this.suit = suit;
+	}
+
+	@Override
+	public int compareTo(Card o) {
+		if ( o.equals( this ) ) {
+			return 0;
+		} 
+		else if (this.rank.ordinal() != o.rank.ordinal()) {
+			return this.rank.ordinal() - o.rank.ordinal();
+		}
+		else if (this.suit.ordinal() != o.suit.ordinal()) {
+			return this.suit.ordinal() - o.suit.ordinal();
+		}
+		
+		return 0;
 	}
 	
 }
