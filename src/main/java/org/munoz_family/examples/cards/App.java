@@ -43,18 +43,32 @@ public class App {
 		System.out.println("----------------------------");
 
 		Deck randomDeck = new Deck();
-		randomDeck.shuffleCards();
-		Deck pokerHand = new Deck( randomDeck.dealCards(13) );
+		Deck pokerHand  = new Deck( randomDeck.dealCards(12) );
+		Deck pokerHand2 = new Deck( randomDeck.dealCards(7) );
+		System.out.println("Undealt cards: ");
+		randomDeck.printDeck(Deck.SORT_DEFAULT);
+
+		System.out.println("Dealt cards: ");
+		System.out.println("----------------------------");
 //		Deck pokerHand = randomDeck;
 		pokerHand.printDeck();
-		System.out.println("High card    : " + pokerHand.getHighCard());
+		System.out.println("High card    : " + pokerHand.getTopCards(1));
 		System.out.println("Low  card    : " + pokerHand.getLowCard());
-		System.out.println("Top 4 SPADES : " + pokerHand.getSuitTop(Suit.SPADES, 4));
-		System.out.println("Top 2 Cards  : " + pokerHand.getRankTop(2));
-		System.out.println("Top 3 FLUSH  : " + pokerHand.getSuitTop(3));
-		System.out.println("Top 4 CLUBS  : " + pokerHand.getSuitTop(Suit.CLUBS, 4));
+		System.out.println("Top 4 SPADES : " + pokerHand.getTopFlush(Suit.SPADES, 4));
+		System.out.println("Top 2 Cards  : " + pokerHand.getTopCards(2));
+		System.out.println("Top 3 FLUSH  : " + pokerHand.getTopFlush(3));
+		System.out.println("Top 4 CLUBS  : " + pokerHand.getTopFlush(Suit.CLUBS, 4));
 		System.out.println("Top 3 CLUBS Straight Flush : " + pokerHand.getTopStraightFlush(Suit.CLUBS, 3));
-		System.out.println("Top 4 Straight Flush : " + pokerHand.getTopStraightFlush(4));
+		System.out.println("Top 5 Straight       : " + pokerHand.getTopStraight(5, null));
+		System.out.println("Top 4 Straight Flush : " + pokerHand.getTopStraightFlush(4, null));
+		System.out.println("Top 3+ of a kind : " + pokerHand.getTopRankMatch(3));
+		System.out.println("Top 2+ of a kind : " + pokerHand.getTopRankMatch(2));
+		System.out.println("Top Royal Flush : " + pokerHand.getTopStraightFlush(5, Rank.ACE));
+
+		System.out.println("----------------------------");
+		System.out.println("Top Poker Hand 1: " + PokerHand.getTopHand(pokerHand.getCards(), 5));
+		System.out.println("Top Poker Hand 2: " + PokerHand.getTopHand(pokerHand2.getCards(), 5));
+		
 		
 	}
 	
