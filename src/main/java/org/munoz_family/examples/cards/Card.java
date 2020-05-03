@@ -24,10 +24,11 @@ public class Card implements Comparable<Card> {
 		EIGHT,
 		NINE,
 		TEN,
-		JACK(10),
-		QUEEN(10),
-		KING(10),
-		ACE(1,11),
+		JACK,
+		QUEEN,
+		KING,
+		ACE( KING.getValue()+1, DUECE.getValue()-1 ), // List multiples in order highest worth first
+//		ACE( DUECE.getValue()-1, KING.getValue()+1 ), // List multiples in order highest worth first
 		;
 		private Integer [] values;
 
@@ -89,6 +90,7 @@ public class Card implements Comparable<Card> {
 		this.suit = suit;
 	}
 	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -97,7 +99,8 @@ public class Card implements Comparable<Card> {
 		result = prime * result + ((suit == null) ? 0 : suit.hashCode());
 		return result;
 	}
-	
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -113,7 +116,8 @@ public class Card implements Comparable<Card> {
 			return false;
 		return true;
 	}
-	
+
+
 	@Override
 	public String toString() {
 		String valueString = this.getRank().hasMultipleValues()
@@ -135,6 +139,9 @@ public class Card implements Comparable<Card> {
 	}
 	public void setSuit(Suit suit) {
 		this.suit = suit;
+	}
+	public int getRankValue() {
+		return rank.getValue();
 	}
 
 	@Override

@@ -43,15 +43,32 @@ public class App {
 		System.out.println("----------------------------");
 
 		Deck randomDeck = new Deck();
-		Deck pokerHand  = new Deck( randomDeck.dealCards(12) );
+		Deck pokerHand  = new Deck( randomDeck.dealCards(26) );
+/*		
+		Deck pokerHand  = new Deck(  
+				new Card(Rank.DUECE, Suit.SPADES),
+				new Card(Rank.THREE, Suit.SPADES),
+				new Card(Rank.FOUR, Suit.CLUBS),
+				new Card(Rank.FIVE, Suit.SPADES),
+				new Card(Rank.ACE, Suit.SPADES)
+				);
+*/		
+/*		
+		pokerHand.removeCards(
+				new Card(Rank.KING, Suit.CLUBS),
+				new Card(Rank.KING, Suit.DIAMONDS),
+				new Card(Rank.KING, Suit.HEARTS),
+				new Card(Rank.KING, Suit.SPADES)
+				);
+*/		
 		Deck pokerHand2 = new Deck( randomDeck.dealCards(7) );
 		System.out.println("Undealt cards: ");
-		randomDeck.printDeck(Deck.SORT_DEFAULT);
+		randomDeck.printDeck( pokerHand.getSortMethod() );
 
 		System.out.println("Dealt cards: ");
 		System.out.println("----------------------------");
-//		Deck pokerHand = randomDeck;
-		pokerHand.printDeck();
+		pokerHand.setSortMethod( Deck.SORT_VALUE );
+		pokerHand.printDeck( pokerHand.getSortMethod() );
 		System.out.println("High card    : " + pokerHand.getTopCards(1));
 		System.out.println("Low  card    : " + pokerHand.getLowCard());
 		System.out.println("Top 4 SPADES : " + pokerHand.getTopFlush(Suit.SPADES, 4));
