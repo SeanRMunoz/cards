@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.munoz_family.examples.cards.PokerHand.HandRank;
-
 public class PokerDeck extends Deck {
 
 	public PokerDeck() {
@@ -29,8 +27,8 @@ public class PokerDeck extends Deck {
 		super(size);
 	}
 
-	public Map<HandRank, List<PokerDeck>> getTopHand() {
-		return PokerHand.getTopHand(this.getCards(), 5);
+	public PokerHand getTopHand() {
+		return PokerHandRanking.getTopHand(this.getCards(), 5);
 	}
 
 	public List<Card> getTopFlush(int count) {
@@ -118,5 +116,5 @@ public class PokerDeck extends Deck {
 		}
 		return largestStraightList.size() >= count ? largestStraightList : Deck.emptyDeck().asList();
 	}
-
+	
 }

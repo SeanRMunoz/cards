@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  */
 public class Deck {
 
+	private static String PRINT_PREFIX = "";
 	public static final Comparator<Card> SORT_DEFAULT = Comparator.comparing(Card::getRank).thenComparing(Card::getSuit)
 			.reversed();
 	public static final Comparator<Card> SORT_VALUE = Comparator.comparing(Card::getRankValue)
@@ -47,11 +48,11 @@ public class Deck {
 	}
 
 	public Deck(Collection<Card> cards) {
-		setCards(cards);
+		setCards(new LinkedHashSet<>(cards));
 	}
 
 	public Deck(Card... cards) {
-		this.cards = new LinkedHashSet<>(Arrays.asList(cards));
+		this(Arrays.asList(cards));
 	}
 
 	public static Deck emptyDeck() {
@@ -123,7 +124,7 @@ public class Deck {
 			int cardNumber = 0;
 			for (Card card : cards) {
 				++cardNumber;
-				System.out.println("Card " + cardNumber + " is a : " + card);
+				System.out.println(getPrintPrefix() + "Card " + cardNumber + " is a : " + card);
 			}
 		}
 	}
@@ -149,7 +150,7 @@ public class Deck {
 	public List<Card> getTopCards(int count) {
 		return getCards().size() >= count
 				? getCards().stream().sorted(getSortMethod()).limit(count).collect(Collectors.toList())
-				: new ArrayList<Card>(0);
+				: Deck.emptyDeck().asList();
 	}
 
 	public Collection<Card> getRankDistinct() {
@@ -169,7 +170,9 @@ public class Deck {
 
 	public List<Card> getTopRankMatch(int count) {
 
-		Entry<Rank, List<Card>> topRankMatch = getCards().stream().collect(Collectors.groupingBy(Card::getRank))
+		Entry<Rank, List<Card>> topRankMatch = getCards().stream()
+				.sorted(getSortMethod())
+				.collect(Collectors.groupingBy(Card::getRank))
 				.entrySet().stream().filter(x -> x.getValue().size() >= count)
 				.sorted(Comparator.comparing(y -> ((Entry<Rank, List<Card>>) y).getValue().size())
 						.thenComparing(z -> new Deck(((Entry<Rank, List<Card>>) z).getValue())
@@ -214,6 +217,14 @@ public class Deck {
 	public Deck setSortMethod(Comparator<Card> sortMethod) {
 		this.sortMethod = sortMethod;
 		return this;
+	}
+
+	public String getPrintPrefix() {
+		return PRINT_PREFIX;
+	}
+
+	public static void setPrintPrefix(String printPrefix) {
+		Deck.PRINT_PREFIX = printPrefix;
 	}
 
 }

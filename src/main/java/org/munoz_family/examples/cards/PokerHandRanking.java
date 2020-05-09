@@ -3,11 +3,9 @@ package org.munoz_family.examples.cards;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-public class PokerHand {
+public class PokerHandRanking {
 
 	public static final Comparator<Card> SORT_DEFAULT = Comparator.comparing(Card::getRank).thenComparing(Card::getSuit).reversed();
 	
@@ -16,14 +14,14 @@ public class PokerHand {
 	public SuitType suitType;
 	public Rank 	rankSequenceTop;
 	
-	public PokerHand(int cardCount, RankType rankType, SuitType suitType) {
+	public PokerHandRanking(int cardCount, RankType rankType, SuitType suitType) {
 		super();
 		this.cardCount = cardCount;
 		this.rankType = rankType;
 		this.suitType = suitType;
 	}
 
-	public PokerHand(int cardCount, RankType rankType, SuitType suitType, Rank rankSequenceTop) {
+	public PokerHandRanking(int cardCount, RankType rankType, SuitType suitType, Rank rankSequenceTop) {
 		super();
 		this.cardCount = cardCount;
 		this.rankType = rankType;
@@ -44,50 +42,50 @@ public class PokerHand {
 	
 	public enum HandRank {
 
-		ROYAL_FLUSH		( new PokerHand( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_SAME, Rank.ACE ) ),
-		STRAIGHT_FLUSH	( new PokerHand( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_SAME ) ),
-		FOUR_KIND		( new PokerHand( 4, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
-		FULL_HOUSE		( new PokerHand[] { 
-						  new PokerHand( 3, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
-						  new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
-		FLUSH			( new PokerHand( 5, RankType.RANK_ANY, SuitType.SUIT_SAME ) ),
-		STRAIGHT		( new PokerHand( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_ANY ) ),
-		THREE_KIND		( new PokerHand( 3, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
-		TWO_PAIR		( new PokerHand[] { 
-						  new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
-						  new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
-		PAIR			( new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
-		HIGH_CARD		( new PokerHand( 1, RankType.RANK_ANY, SuitType.SUIT_ANY ) ),
+		ROYAL_FLUSH		( new PokerHandRanking( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_SAME, Rank.ACE ) ),
+		STRAIGHT_FLUSH	( new PokerHandRanking( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_SAME ) ),
+		FOUR_KIND		( new PokerHandRanking( 4, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
+		FULL_HOUSE		( new PokerHandRanking[] { 
+						  new PokerHandRanking( 3, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
+						  new PokerHandRanking( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
+		FLUSH			( new PokerHandRanking( 5, RankType.RANK_ANY, SuitType.SUIT_SAME ) ),
+		STRAIGHT		( new PokerHandRanking( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_ANY ) ),
+		THREE_KIND		( new PokerHandRanking( 3, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
+		TWO_PAIR		( new PokerHandRanking[] { 
+						  new PokerHandRanking( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
+						  new PokerHandRanking( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
+		PAIR			( new PokerHandRanking( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
+		HIGH_CARD		( new PokerHandRanking( 1, RankType.RANK_ANY, SuitType.SUIT_ANY ) ),
 		;
 		
-		private PokerHand[] pokerHands;
+		private PokerHandRanking[] pokerHands;
 
-		private HandRank(PokerHand[] pokerHands) {
+		private HandRank(PokerHandRanking[] pokerHands) {
 			this.pokerHands = pokerHands;
 		}
 		
-		private HandRank(PokerHand pokerHand) {
-			this.pokerHands = new PokerHand[] {pokerHand};
+		private HandRank(PokerHandRanking pokerHand) {
+			this.pokerHands = new PokerHandRanking[] {pokerHand};
 		}
 		
-		public PokerHand[] getPokerHands() {
+		public PokerHandRanking[] getPokerHands() {
 			return pokerHands;
 		}
 
-		public void setPokerHands(PokerHand[] pokerHands) {
+		public void setPokerHands(PokerHandRanking[] pokerHands) {
 			this.pokerHands = pokerHands;
 		}
 
-		public PokerHand getPokerHand() {
+		public PokerHandRanking getPokerHand() {
 			return pokerHands != null && pokerHands.length > 0 ? pokerHands[0] : null;
 		}
 
 	}
 
-	public static Map<HandRank, List<PokerDeck>> getTopHand(Collection<Card> cards, int sizeHand) {
+	public static PokerHand getTopHand(Collection<Card> cards, int sizeHand) {
 		sizeHand = (sizeHand <= 0 || sizeHand > cards.size()) ? cards.size() : sizeHand;
 		int unusedCardCount = cards.size() - sizeHand;
-		Map<HandRank, List<PokerDeck>> topHands = new LinkedHashMap<>();
+		PokerHand topPokerHand = new PokerHand();
 		PokerDeck unplayedCards = new PokerDeck(cards);
 		List<Card> totalPlayedCards = new ArrayList<>();
 		for (HandRank handRank : HandRank.values()) {
@@ -96,7 +94,7 @@ public class PokerHand {
 				break;
 			}
 			totalPlayedCards.clear();
-			for (PokerHand pokerHand : handRank.pokerHands) {
+			for (PokerHandRanking pokerHand : handRank.pokerHands) {
 				if (unplayedCards.getCards().size() - unusedCardCount < pokerHand.cardCount ) {
 					// Not enough cards left to satisfy this hand
 					continue;
@@ -138,23 +136,34 @@ public class PokerHand {
 					throw new RuntimeException("Unknown RankType!");
 				}
 				if (playedCards == null || playedCards.size() <= 0) {
-					topHands.remove(handRank);
+					topPokerHand.remove(handRank);
 					unplayedCards.getCards().addAll(totalPlayedCards);
 					totalPlayedCards.clear();
 					break;
 				}
 				PokerDeck playedHand = new PokerDeck(playedCards);
 				totalPlayedCards.addAll(playedCards);
-				List<PokerDeck> playedHands = topHands.get(handRank);
+				List<PokerDeck> playedHands = topPokerHand.get(handRank);
 				if (playedHands == null) {
 					playedHands = new ArrayList<>();
-					topHands.put(handRank, playedHands);
+					topPokerHand.put(handRank, playedHands);
 				}
 				playedHands.add(playedHand);
 				unplayedCards.getCards().removeAll(playedCards);
 			} // foreach hand within a poker hand
 		} // foreach poker hand
-		return topHands;
+		return topPokerHand;
 	}
 
+//	public static  HandRank asHandRank( Map<HandRank, List<PokerDeck>> pokerHands ) {
+//		return pokerHands != null 
+//				? pokerHands.keySet().stream().findFirst().orElse(null)
+//				: null;
+//	}
+//
+//	public static  List<HandRank> asHandRanks( Map<HandRank, List<PokerDeck>> pokerHands ) {
+//		return pokerHands != null 
+//				? pokerHands.keySet().stream().collect(Collectors.toList())
+//						: null;
+//	}
 }

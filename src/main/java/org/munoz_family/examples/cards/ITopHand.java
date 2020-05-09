@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.munoz_family.examples.cards.PokerHand.HandRank;
+import org.munoz_family.examples.cards.PokerHandRanking.HandRank;
 
 public interface ITopHand {
 
