@@ -84,11 +84,11 @@ public class PokerHand {
 
 	}
 
-	public static Map<HandRank, List<Deck>> getTopHand(Collection<Card> cards, int sizeHand) {
+	public static Map<HandRank, List<PokerDeck>> getTopHand(Collection<Card> cards, int sizeHand) {
 		sizeHand = (sizeHand <= 0 || sizeHand > cards.size()) ? cards.size() : sizeHand;
 		int unusedCardCount = cards.size() - sizeHand;
-		Map<HandRank, List<Deck>> topHands = new LinkedHashMap<>();
-		Deck unplayedCards = new Deck(cards);
+		Map<HandRank, List<PokerDeck>> topHands = new LinkedHashMap<>();
+		PokerDeck unplayedCards = new PokerDeck(cards);
 		List<Card> totalPlayedCards = new ArrayList<>();
 		for (HandRank handRank : HandRank.values()) {
 			if (unplayedCards.getCards().size() - unusedCardCount <= 0) {
@@ -143,9 +143,9 @@ public class PokerHand {
 					totalPlayedCards.clear();
 					break;
 				}
-				Deck playedHand = new Deck(playedCards);
+				PokerDeck playedHand = new PokerDeck(playedCards);
 				totalPlayedCards.addAll(playedCards);
-				List<Deck> playedHands = topHands.get(handRank);
+				List<PokerDeck> playedHands = topHands.get(handRank);
 				if (playedHands == null) {
 					playedHands = new ArrayList<>();
 					topHands.put(handRank, playedHands);

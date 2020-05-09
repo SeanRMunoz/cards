@@ -40,7 +40,7 @@ public class App {
 		System.out.println("----------------------------");
 
 		Deck randomDeck = new Deck();
-		Deck pokerHand  = new Deck( randomDeck.dealCards(26) );
+		PokerDeck pokerHand  = new PokerDeck( randomDeck.dealCards(26) );
 /*		
 		Deck pokerHand  = new Deck(  
 				new Card(Rank.DUECE, Suit.SPADES),
@@ -58,7 +58,7 @@ public class App {
 				new Card(Rank.KING, Suit.SPADES)
 				);
 */		
-		Deck pokerHand2 = new Deck( randomDeck.dealCards(7) );
+		PokerDeck pokerHand2 = new PokerDeck( randomDeck.dealCards(7) );
 		System.out.println("Undealt cards: ");
 		randomDeck.printDeck( pokerHand.getSortMethod() );
 
@@ -80,9 +80,8 @@ public class App {
 		System.out.println("Top Royal Flush : " + pokerHand.getTopStraightFlush(5, Rank.ACE));
 
 		System.out.println("----------------------------");
-		System.out.println("Top Poker Hand 1: " + PokerHand.getTopHand(pokerHand.getCards(), 5));
-		System.out.println("Top Poker Hand 2: " + PokerHand.getTopHand(pokerHand2.getCards(), 5));
-		
+		System.out.println("Top Poker Hand 1: " + pokerHand.getTopHand());
+		System.out.println("Top Poker Hand 2: " + pokerHand2.getTopHand());
 		
 	}
 	

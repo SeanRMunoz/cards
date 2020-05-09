@@ -5,13 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Normal playing card 'deck' representation where every card must have a unique
@@ -36,13 +33,17 @@ public class Deck {
 	}
 
 	public Deck(int size) {
-		initializeDeck();
-		int maxDeckSize = getCards().size();
-		if (size < 1 || size > maxDeckSize) {
-			throw new RuntimeException("Invalid deck size. MUST be between 1 and " + maxDeckSize);
+		if (size == 0) {
+			setCards( new LinkedHashSet<>() );
+		} else {
+			initializeDeck();
+			int maxDeckSize = getCards().size();
+			if (size < 1 || size > maxDeckSize) {
+				throw new RuntimeException("Invalid deck size. MUST be between 0 and " + maxDeckSize);
+			}
+			shuffleCards();
+			dealCards(maxDeckSize - size);
 		}
-		shuffleCards();
-		dealCards(maxDeckSize - size);
 	}
 
 	public Deck(Collection<Card> cards) {
@@ -51,6 +52,14 @@ public class Deck {
 
 	public Deck(Card... cards) {
 		this.cards = new LinkedHashSet<>(Arrays.asList(cards));
+	}
+
+	public static Deck emptyDeck() {
+		return new Deck(0);
+	}
+	
+	public List<Card> asList() {
+		return new ArrayList<>(getCards());
 	}
 
 	public void initializeDeck() {
@@ -143,87 +152,10 @@ public class Deck {
 				: new ArrayList<Card>(0);
 	}
 
-	public List<Card> getTopFlush(int count) {
-
-		Card topFlushCard = Stream.of(Suit.values()).flatMap(x -> getTopFlush(x, count).stream())
-				.sorted(getSortMethod()).findFirst().orElse(null);
-
-		return topFlushCard != null ? getTopFlush(topFlushCard.getSuit(), count) : new ArrayList<Card>(0);
-	}
-
-	public List<Card> getTopFlush(Suit suit, int count) {
-		return getSuitCount(suit) >= count ? getCards().stream().sorted(getSortMethod())
-				.filter(x -> x.getSuit() == suit).limit(count).collect(Collectors.toList()) : new ArrayList<Card>(0);
-	}
-
-	public List<Card> getTopStraight(int count, Rank highCard) {
-
-		List<Card> straight = getTopStraight(getRankDistinct(), count);
-
-		// return straight;
-		return (highCard == null) || (highCard != null && straight.size() > 0 && straight.get(0).getRank() == highCard)
-				? straight
-				: new ArrayList<>(0);
-	}
-
 	public Collection<Card> getRankDistinct() {
 		List<Card> straight = getCards().stream().collect(Collectors.groupingBy(Card::getRank)).entrySet().stream()
 				.map(x -> x.getValue().get(0)).collect(Collectors.toList());
 		return straight;
-	}
-
-	public List<Card> getTopStraightFlush(int count, Rank highCard) {
-		List<Card> straightFlush = new ArrayList<>(0);
-		Map<Suit, List<Card>> mapFlush = new HashMap<>();
-		List<Card> allStraightFlushCards = new ArrayList<>();
-		for (Suit suit : Suit.values()) {
-			List<Card> straightFlushTmp = getTopStraightFlush(suit, count);
-			mapFlush.put(suit, straightFlushTmp);
-			allStraightFlushCards.addAll(straightFlushTmp);
-		}
-		Deck tempDeck = new Deck(allStraightFlushCards);
-		List<Card> topCard = (List<Card>) tempDeck.getTopFlush(1);
-		straightFlush = topCard.size() > 0 ? mapFlush.get(topCard.get(0).getSuit()) : straightFlush;
-
-		return (highCard == null)
-				|| (highCard != null && straightFlush.size() > 0 && straightFlush.get(0).getRank() == highCard)
-						? straightFlush
-						: new ArrayList<>(0);
-	}
-
-	public List<Card> getTopStraightFlush(Suit suit, int count) {
-		List<Card> straightFlush = new ArrayList<Card>();
-		if (getSuitCount(suit) >= count) {
-			straightFlush = getTopStraight(getSuitTopSorted(suit), count);
-		}
-		return straightFlush;
-	}
-
-	private List<Card> getTopStraight(Collection<Card> cards, int count) {
-		List<Integer> sortedValues = cards.stream().flatMap(x -> Arrays.stream(x.getRank().getValues()))
-				.sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-		List<Card> straight = new ArrayList<Card>(count);
-		List<Card> largestStraightList = new ArrayList<>(count);
-		Integer priorNum = Card.WILD_CARD, index = 0;
-		for (Integer curNum : sortedValues) {
-			boolean isSequence = (priorNum == Card.WILD_CARD) || (priorNum - curNum == 1);
-			priorNum = curNum;
-			if (!isSequence) {
-				straight.clear();
-			}
-			straight.add(getCardByValue(cards, curNum));
-			if (straight.size() > largestStraightList.size()) {
-				largestStraightList.clear();
-				largestStraightList.addAll(straight);
-			}
-			boolean isEnoughCardsLeft = count - largestStraightList.size() < sortedValues.size() - index;
-			boolean isCountMet = straight.size() >= count;
-			if (!isEnoughCardsLeft || isCountMet) {
-				break;
-			}
-			++index;
-		}
-		return largestStraightList.size() >= count ? largestStraightList : new ArrayList<Card>(0);
 	}
 
 	public int getSuitCount(Suit suit) {
@@ -243,13 +175,12 @@ public class Deck {
 						.thenComparing(z -> new Deck(((Entry<Rank, List<Card>>) z).getValue())
 								.setSortMethod(this.getSortMethod()).getHighCard().getRankValue())
 						.reversed())
-				// .thenComparing(z -> ((Entry<Rank, List<Card>>) z).getKey()).reversed())
 				.findFirst().orElse(null);
 
 		return topRankMatch != null ? topRankMatch.getValue() : new ArrayList<>(0);
 	}
 
-	private static Card getCardByValue(Collection<Card> cards, int cardValue) {
+	public static Card getCardByValue(Collection<Card> cards, int cardValue) {
 		return cards.stream().filter(x -> Arrays.asList(x.getRank().getValues()).contains(cardValue)).findFirst()
 				.orElse(null);
 	}
