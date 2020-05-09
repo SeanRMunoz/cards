@@ -11,9 +11,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.munoz_family.examples.cards.Card;
-import org.munoz_family.examples.cards.Card.Rank;
-import org.munoz_family.examples.cards.Card.Suit;
 
 public class CardTest {
 
@@ -44,7 +41,7 @@ public class CardTest {
 			assertTrue(e.getMessage().toLowerCase().contains("must provide valid"));
 		}
 		assertNull(card);
-		
+
 		try {
 			// Test null for Suit
 			card = new Card(Rank.QUEEN, null);
@@ -53,7 +50,7 @@ public class CardTest {
 			assertTrue(e.getMessage().toLowerCase().contains("suit"));
 		}
 		assertNull(card);
-		
+
 		try {
 			// Test null for Rank
 			card = new Card(null, Suit.HEARTS);
@@ -63,7 +60,7 @@ public class CardTest {
 		}
 		assertNull(card);
 	}
-	
+
 	@Test
 	public void testCard_ValidParams() {
 		Card card = null;

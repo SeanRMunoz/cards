@@ -13,9 +13,6 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.munoz_family.examples.cards.Card.Rank;
-import org.munoz_family.examples.cards.Card.Suit;
-
 /**
  * Normal playing card 'deck' representation where every card must have a unique
  * rank and suit.
@@ -57,9 +54,9 @@ public class Deck {
 	}
 
 	public void initializeDeck() {
-		cards = new LinkedHashSet<>(Card.Rank.values().length * Card.Suit.values().length);
-		for (Suit suit : Card.Suit.values()) {
-			for (Rank rank : Card.Rank.values()) {
+		cards = new LinkedHashSet<>(Rank.values().length * Suit.values().length);
+		for (Suit suit : Suit.values()) {
+			for (Rank rank : Rank.values()) {
 				Card card = new Card(rank, suit);
 				cards.add(card);
 			}
@@ -179,7 +176,7 @@ public class Deck {
 		List<Card> straightFlush = new ArrayList<>(0);
 		Map<Suit, List<Card>> mapFlush = new HashMap<>();
 		List<Card> allStraightFlushCards = new ArrayList<>();
-		for (Suit suit : Card.Suit.values()) {
+		for (Suit suit : Suit.values()) {
 			List<Card> straightFlushTmp = getTopStraightFlush(suit, count);
 			mapFlush.put(suit, straightFlushTmp);
 			allStraightFlushCards.addAll(straightFlushTmp);
@@ -209,19 +206,17 @@ public class Deck {
 		List<Card> largestStraightList = new ArrayList<>(count);
 		Integer priorNum = Card.WILD_CARD, index = 0;
 		for (Integer curNum : sortedValues) {
-			boolean isSequence = 
-					(priorNum == Card.WILD_CARD) || 
-					(priorNum - curNum == 1);
+			boolean isSequence = (priorNum == Card.WILD_CARD) || (priorNum - curNum == 1);
 			priorNum = curNum;
 			if (!isSequence) {
 				straight.clear();
 			}
-			straight.add( getCardByValue(cards, curNum)  );
+			straight.add(getCardByValue(cards, curNum));
 			if (straight.size() > largestStraightList.size()) {
 				largestStraightList.clear();
 				largestStraightList.addAll(straight);
 			}
-			boolean isEnoughCardsLeft = count - largestStraightList.size() < sortedValues.size() - index ;
+			boolean isEnoughCardsLeft = count - largestStraightList.size() < sortedValues.size() - index;
 			boolean isCountMet = straight.size() >= count;
 			if (!isEnoughCardsLeft || isCountMet) {
 				break;
@@ -259,6 +254,14 @@ public class Deck {
 				.orElse(null);
 	}
 
+	public void sort() {
+		setCards(getCards().stream().sorted(getSortMethod()).collect(Collectors.toList()));
+	}
+
+	public void sortReversed() {
+		setCards(getCards().stream().sorted(getSortMethod().reversed()).collect(Collectors.toList()));
+	}
+	
 	@Override
 	public String toString() {
 		return "Deck [cards=" + cards + "]";

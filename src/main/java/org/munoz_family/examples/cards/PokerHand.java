@@ -2,13 +2,10 @@ package org.munoz_family.examples.cards;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.munoz_family.examples.cards.Card.Rank;
 
 public class PokerHand {
 
@@ -47,16 +44,18 @@ public class PokerHand {
 	
 	public enum HandRank {
 
-		ROYAL_FLUSH		( new PokerHand( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_SAME, Card.Rank.ACE ) ),
+		ROYAL_FLUSH		( new PokerHand( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_SAME, Rank.ACE ) ),
 		STRAIGHT_FLUSH	( new PokerHand( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_SAME ) ),
 		FOUR_KIND		( new PokerHand( 4, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
-		FULL_HOUSE		( new PokerHand[] { new PokerHand( 3, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
-											new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
+		FULL_HOUSE		( new PokerHand[] { 
+						  new PokerHand( 3, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
+						  new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
 		FLUSH			( new PokerHand( 5, RankType.RANK_ANY, SuitType.SUIT_SAME ) ),
 		STRAIGHT		( new PokerHand( 5, RankType.RANK_SEQUENCE, SuitType.SUIT_ANY ) ),
 		THREE_KIND		( new PokerHand( 3, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
-		TWO_PAIR		( new PokerHand[] { new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
-											new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
+		TWO_PAIR		( new PokerHand[] { 
+						  new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ), 
+						  new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) } ),
 		PAIR			( new PokerHand( 2, RankType.RANK_SAME, SuitType.SUIT_ANY ) ),
 		HIGH_CARD		( new PokerHand( 1, RankType.RANK_ANY, SuitType.SUIT_ANY ) ),
 		;
@@ -83,18 +82,6 @@ public class PokerHand {
 			return pokerHands != null && pokerHands.length > 0 ? pokerHands[0] : null;
 		}
 
-		public Collection<Card> getHand(HandRank handRank, Collection<Card> cards) {
-			Collection<Card> handCards = null;
-			PokerHand pokerHand = handRank.getPokerHand(); 
-			if(cards.size() < pokerHand.cardCount)
-				return handCards;
-			
-			
-			return handCards;			
-		}
-
-
-		
 	}
 
 	public static Map<HandRank, List<Deck>> getTopHand(Collection<Card> cards, int sizeHand) {

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.munoz_family.examples.cards.Card.Rank;
-import org.munoz_family.examples.cards.Card.Suit;
-
 public class App {
 
 	public static void main(String[] args) {
@@ -31,7 +28,7 @@ public class App {
 		boolean addedCard = cardDeck.getCards().add(addCard);
 		System.out.println("Able to add card : " + addCard + " > " + addedCard );
 		
-		int deckCardCount = Card.Rank.values().length * Card.Suit.values().length;
+		int deckCardCount = Rank.values().length * Suit.values().length;
 		System.out.println("Deck size : " + deckCardCount);
 		
 		Deck sortDeck = new Deck();
